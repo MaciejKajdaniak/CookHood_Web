@@ -1,12 +1,9 @@
-import RegisterForm from './components/Auth/RegisterForm';
+import React from "react";
+import AppRoutes from './routes.jsx';
 
 function App() {
-    return (
-        <div>
-            <h1>Rejestracja</h1>
-            <RegisterForm />
-        </div>
-    );
+    return <AppRoutes />;
 }
 
 export default App;
+``
