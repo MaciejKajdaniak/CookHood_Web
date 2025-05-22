@@ -1,18 +1,27 @@
 import {useState} from 'react';
 import axios from 'axios';
 
-function OfferForm(){
-    const [formData, setFormData] = useState({title:'', category:'meal', price: ''});
+function OfferForm() {
+    const [formData, setFormData] = useState({ title: '', category: 'meal', price: '' });
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const token = localStorage.getItem('token');
+
         try {
-            await axios.post('/api/offers/create', {
-                ...formData,
-                userId: loggedInUserId,
-            });
+            await axios.post(
+                'http://localhost:3000/api/offers/create',
+                { ...formData },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
             alert('Oferta dodana pomyślnie!');
         } catch (err) {
             alert('Błąd przy dodawaniu oferty');

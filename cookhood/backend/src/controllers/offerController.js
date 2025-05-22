@@ -1,10 +1,11 @@
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient, Prisma } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const createOffer = async (req, res) => {
-    const { title, category, price, userId } = req.body;
+    const { title, category, price } = req.body;
+    const userId = req.user.userId;
 
-    if (!title || !category || !price || !userId) {
+    if (!title || !category || !price) {
         return res.status(400).json({ message: 'Brakuje danych' });
     }
 
