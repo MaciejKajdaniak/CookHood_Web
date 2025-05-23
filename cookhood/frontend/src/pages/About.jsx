@@ -1,11 +1,12 @@
+import React from 'react';
 import Navbar from '../components/Shared/Navbar.jsx';
-
-function OffersDetails(){
+function About(){
     return (
         <div>
             <Navbar />
         </div>
     );
+
 }
 
-export default OffersDetails;
+export default About;

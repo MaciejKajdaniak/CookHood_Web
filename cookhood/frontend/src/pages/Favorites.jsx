@@ -1,11 +1,12 @@
+import React from 'react';
 import Navbar from '../components/Shared/Navbar.jsx';
 
-function OffersDetails(){
-    return (
+function Favorites(){
+    return(
         <div>
             <Navbar />
         </div>
     );
 }
 
-export default OffersDetails;
+export default Favorites;
