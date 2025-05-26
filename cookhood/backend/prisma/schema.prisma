@@ -15,16 +15,16 @@ model User {
   role      String   @default("buyer") // buyer | seller
   createdAt DateTime @default(now())
 
-  offers    Offer[]
+  offers Offer[]
 }
 
 model Offer {
   id        Int      @id @default(autoincrement())
   title     String
   category  String
+  photo     String
   price     Decimal
   createdAt DateTime @default(now())
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
-
 }
