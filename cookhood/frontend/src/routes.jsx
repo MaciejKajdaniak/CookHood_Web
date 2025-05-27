@@ -8,6 +8,7 @@ import Offers from "./pages/Offers.jsx";
 import Favorites from "./pages/Favorites.jsx";
 import About from "./pages/About.jsx";
 import Profile from "./pages/Profile.jsx";
+import OffersDetails from "./pages/OffersDetails.jsx";
 
 const AppRoutes = () => (
         <Routes>
@@ -16,6 +17,7 @@ const AppRoutes = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/create-offer" element={<CreateOffer/>}/>
             <Route path="/offers" element={<Offers />}/>
+            <Route path="/offers/:id" element={<OffersDetails />} />
             <Route path="/favorites" element={<Favorites/>}/>
             <Route path="/about" element={<About />}/>
             <Route path="/profile" element={<Profile />}/>

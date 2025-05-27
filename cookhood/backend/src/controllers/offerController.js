@@ -15,7 +15,7 @@ const createOffer = async (req, res) => {
             data: {
                 title,
                 category,
-                photo: req.file.filename,
+                photo: photoPath,
                 price: new Prisma.Decimal(price),
                 user: { connect: { id: userId } },
             },
@@ -27,4 +27,30 @@ const createOffer = async (req, res) => {
     }
 };
 
-module.exports = { createOffer };
+const getOffers = async (req, res) => {
+    try {
+        const offers = await prisma.offer.findMany({
+            include: { user: true },
+            orderBy: { createdAt: 'desc' }
+        });
+        res.json(offers);
+    } catch (err) {
+        res.status(500).json({ message: 'Błąd pobierania ofert' });
+    }
+};
+
+const getOfferById = async (req, res) => {
+    const id = parseInt(req.params.id);
+    try {
+        const offer = await prisma.offer.findUnique({
+            where: { id },
+            include: { user: true }
+        });
+        if (!offer) return res.status(404).json({ message: 'Oferta nie znaleziona' });
+        res.json(offer);
+    } catch (err) {
+        res.status(500).json({ message: 'Błąd pobierania oferty' });
+    }
+};
+
+module.exports = { createOffer, getOffers, getOfferById };
