@@ -1,23 +1,39 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Shared/Navbar.jsx';
 import axios from 'axios';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-function Offers(){
+const Offers = () => {
     const [offers, setOffers] = useState([]);
+    const [category, setCategory] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get('http://localhost:3000/api/offers')
-            .then(res => setOffers(res.data))
-            .catch(err => console.error('Błąd przy pobieraniu ofert',err));
+        fetchOffers();
+    }, [category]);
 
-    }, []);
+    const fetchOffers = async () => {
+        console.log('kategoria (mam już dość tych jebanych błędów):', category);
+        try {
+            const res = await axios.get('http://localhost:3000/api/offers', {
+                params: { category }
+            });
+            console.log('url:', res.config.url);
+            console.log('data:', res.data);
+            setOffers(res.data);
+        } catch (err) {
+            console.error('Błąd podczas pobierania ofert:', err);
+        }
+    };
+
+    const handleCategoryChange = (e) => {
+        setCategory(e.target.value);
+    };
 
     const addToFavorites = (offer) => {
         const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
         const alreadyExists = favorites.some(f => f.id === offer.id);
-        if(!alreadyExists){
+        if (!alreadyExists) {
             favorites.push(offer);
             localStorage.setItem('favorites', JSON.stringify(favorites));
             alert("Dodano ofertę do ulubionych");
@@ -26,13 +42,27 @@ function Offers(){
 
     const goToDetails = (id) => {
         navigate(`/offers/${id}`);
-    }
+    };
 
-    return(
+    return (
         <div>
             <Navbar />
             <div style={{ padding: '2rem' }}>
-                <h2>Oferty</h2>
+                <h1>Oferty</h1>
+
+                <div style={{ marginBottom: '20px' }}>
+                    <label>Kategoria:&nbsp;</label>
+                    <select value={category} onChange={handleCategoryChange}>
+                        <option value="">Wszystkie</option>
+                        <option value="meal">Posiłki</option>
+                        <option value="fruits">Owoce</option>
+                        <option value="vegetables">Warzywa</option>
+                        <option value="dairy">Nabiał</option>
+                        <option value="meat">Mięso</option>
+                        <option value="other">Inne</option>
+                    </select>
+                </div>
+
                 <div style={{
                     display: 'grid',
                     gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
@@ -47,7 +77,7 @@ function Offers(){
                         }}>
                             {offer.photo && (
                                 <img
-                                    src={`/uploads/${offer.photo}`}
+                                    src={`http://localhost:3000/uploads/${offer.photo}`}
                                     alt={offer.title}
                                     style={{
                                         width: '100%',
@@ -71,6 +101,6 @@ function Offers(){
             </div>
         </div>
     );
-}
+};
 
 export default Offers;

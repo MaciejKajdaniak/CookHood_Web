@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
 const offerRoutes  = require('./routes/offerRoutes');
+const contactRoutes = require('./routes/contactRoutes');
 const errorHandler = require('./middleware/errorHandler');
 const path = require('path');
 
@@ -18,6 +19,8 @@ app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/auth', authRoutes);
 app.use('/api/offers', offerRoutes);
+app.use('/api', contactRoutes);
+
 
 app.use(errorHandler);
 

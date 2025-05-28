@@ -69,7 +69,9 @@ function OfferForm() {
                 <option value="meal">Posiłek</option>
                 <option value="fruits">Owoce</option>
                 <option value="vegetables">Warzywa</option>
-                <option value="drink">Napój</option>
+                <option value="dairy">Nabiał</option>
+                <option value="meat">Mięso</option>
+                <option value="other">Inne</option>
             </select>
             <label htmlFor="photo">Zdjęcie:</label>
             <input name="photo" type="file" accept="image/*" onChange={handleChange} required/>

@@ -29,13 +29,18 @@ const createOffer = async (req, res) => {
 
 const getOffers = async (req, res) => {
     try {
+        console.log('req.query:', req.query)
+        const { category } = req.query;
+        console.log('Requested category:', category);
+
         const offers = await prisma.offer.findMany({
-            include: { user: true },
-            orderBy: { createdAt: 'desc' }
+            where: category ? { category } : {},
         });
+
         res.json(offers);
-    } catch (err) {
-        res.status(500).json({ message: 'Błąd pobierania ofert' });
+    } catch (error) {
+        console.error('Błąd podczas pobierania ofert:', error);
+        res.status(500).json({ message: 'Wystąpił błąd podczas pobierania ofert.' });
     }
 };
 
