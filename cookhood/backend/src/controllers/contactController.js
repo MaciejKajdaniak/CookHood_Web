@@ -10,10 +10,6 @@ const contactSeller = async (req, res) => {
             where: { id: sellerId }
         });
 
-        if (!seller) {
-            return res.status(404).json({ message: 'Sprzedawca nie znaleziony' });
-        }
-
         const transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
             port: 587,
