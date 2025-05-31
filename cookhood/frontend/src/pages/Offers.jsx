@@ -13,7 +13,7 @@ const Offers = () => {
     }, [category]);
 
     const fetchOffers = async () => {
-        console.log('kategoria (mam już dość tych jebanych błędów):', category);
+        console.log('kategoria:', category);
         try {
             const res = await axios.get('http://localhost:3000/api/offers', {
                 params: { category }

@@ -7,6 +7,11 @@ function Favorites(){
     const navigate = useNavigate();
 
     useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            navigate('/login');
+            return;
+        }
         const stored = JSON.parse(localStorage.getItem('favorites')) || [];
         setFavorites(stored);
     }, []);
