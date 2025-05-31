@@ -13,7 +13,6 @@ const Navbar = () => {
                 <Link to="/offers" style={styles.link}>Oferty</Link>
                 <Link to="/create-offer" style={styles.link}>Dodaj ofertę</Link>
                 <Link to="/favorites" style={styles.link}>Ulubione</Link>
-                <Link to="/about" style={styles.link}>O nas</Link>
             </div>
             <div style={styles.right}>
                 {isLoggedIn ? (

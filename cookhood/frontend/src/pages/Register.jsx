@@ -6,7 +6,6 @@ function Register() {
     return (
         <div>
             <Navbar />
-            <h2>Rejestracja</h2>
             <RegisterForm />
         </div>
     );

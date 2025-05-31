@@ -34,7 +34,7 @@ function Favorites(){
                         }}>
                             {offer.photo && (
                                 <img
-                                    src={`/uploads/${offer.photo}`}
+                                    src={`http://localhost:3000/uploads/${offer.photo}`}
                                     alt={offer.title}
                                     style={{
                                         width: '100%',

@@ -1,9 +1,11 @@
 import React from 'react';
 import Navbar from '../components/Shared/Navbar.jsx';
-import { useNavigate } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 
 const Home = () => {
     const navigate = useNavigate();
+    const token = localStorage.getItem('token');
+    const isLoggedIn = !!token;
 
     return (
         <div style={styles.container}>
@@ -14,8 +16,15 @@ const Home = () => {
                     <h1 style={styles.heading}>Kupuj lokalnie. Ratuj jedzenie.</h1>
                     <p style={styles.subtext}>CookHood to miejsce, gdzie znajdziesz i wystawisz lokalne produkty spożywcze — świeże, domowe, z lokalnych farm.</p>
                     <div>
-                        <button style={styles.button} onClick={() => navigate('/login')}>Zaloguj się</button>
-                        <button style={styles.RegisterButton} onClick={() => navigate('/register')}>Zarejestruj się</button>
+                        {isLoggedIn ? (
+                            <button style={styles.button} onClick={() => navigate('/profile')}>Twój Profil</button>
+                        ) : (
+                            <>
+                            <button style={styles.button} onClick={() => navigate('/login')}>Zaloguj się</button>
+                                <button style={styles.RegisterButton} onClick={() => navigate('/register')}>Zarejestruj się</button>
+                            </>
+                        )}
+
                     </div>
                 </div>
                 <img
