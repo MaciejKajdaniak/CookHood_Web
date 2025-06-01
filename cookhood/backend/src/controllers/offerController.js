@@ -8,6 +8,11 @@ const createOffer = async (req, res) => {
     const photoPath = req.file ? req.file.filename : null;
     console.log('req.user:', req.user);
 
+    const userExists = await prisma.user.findUnique({ where: { id: userId } });
+    if (!userExists) {
+        return res.status(400).json({ message: 'Użytkownik nie istnieje' });
+    }
+
     if (!title || !category || !price) {
         return res.status(400).json({ message: 'Brakuje danych' });
     }
@@ -31,22 +36,14 @@ const createOffer = async (req, res) => {
 
 const getOffers = async (req, res) => {
     try {
-        console.log('req.query:', req.query);
         const { category } = req.query;
-        console.log('Requested category:', category);
-
         const whereClause = {};
         if (category && category.trim() !== '') {
             whereClause.category = category.trim();
         }
-
-        const offers = await prisma.offer.findMany({
-            where: whereClause,
-        });
-
+        const offers = await prisma.offer.findMany({ where: whereClause });
         res.json(offers);
     } catch (error) {
-        console.error('Błąd podczas pobierania ofert:', error);
         res.status(500).json({ message: 'Wystąpił błąd podczas pobierania ofert.', error: error.message });
     }
 };
