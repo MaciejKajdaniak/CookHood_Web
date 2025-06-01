@@ -6,6 +6,7 @@ const createOffer = async (req, res) => {
     const { title, category, price } = req.body;
     const userId = req.user.userId;
     const photoPath = req.file ? req.file.filename : null;
+    console.log('req.user:', req.user);
 
     if (!title || !category || !price) {
         return res.status(400).json({ message: 'Brakuje danych' });
