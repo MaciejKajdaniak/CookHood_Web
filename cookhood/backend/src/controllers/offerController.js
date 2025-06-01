@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { PrismaClient, Prisma } = require('@prisma/client');
 const prisma = new PrismaClient();
 
@@ -29,18 +30,23 @@ const createOffer = async (req, res) => {
 
 const getOffers = async (req, res) => {
     try {
-        console.log('req.query:', req.query)
+        console.log('req.query:', req.query);
         const { category } = req.query;
         console.log('Requested category:', category);
 
+        const whereClause = {};
+        if (category && category.trim() !== '') {
+            whereClause.category = category.trim();
+        }
+
         const offers = await prisma.offer.findMany({
-            where: category ? { category } : {},
+            where: whereClause,
         });
 
         res.json(offers);
     } catch (error) {
         console.error('Błąd podczas pobierania ofert:', error);
-        res.status(500).json({ message: 'Wystąpił błąd podczas pobierania ofert.' });
+        res.status(500).json({ message: 'Wystąpił błąd podczas pobierania ofert.', error: error.message });
     }
 };
 

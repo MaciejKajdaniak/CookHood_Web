@@ -6,6 +6,11 @@ import { useNavigate } from 'react-router-dom';
 const Offers = () => {
     const [offers, setOffers] = useState([]);
     const [category, setCategory] = useState('');
+
+    const [favorites, setFavorites] = useState(() => {
+        return JSON.parse(localStorage.getItem('favorites')) || [];
+    });
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -13,13 +18,10 @@ const Offers = () => {
     }, [category]);
 
     const fetchOffers = async () => {
-        console.log('kategoria (mam już dość tych jebanych błędów):', category);
         try {
             const res = await axios.get('http://localhost:3000/api/offers', {
                 params: { category }
             });
-            console.log('url:', res.config.url);
-            console.log('data:', res.data);
             setOffers(res.data);
         } catch (err) {
             console.error('Błąd podczas pobierania ofert:', err);
@@ -30,19 +32,26 @@ const Offers = () => {
         setCategory(e.target.value);
     };
 
-    const addToFavorites = (offer) => {
-        const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-        const alreadyExists = favorites.some(f => f.id === offer.id);
-        if (!alreadyExists) {
-            favorites.push(offer);
-            localStorage.setItem('favorites', JSON.stringify(favorites));
+    const toggleFavorite = (offer) => {
+        const updatedFavorites = [...favorites];
+        const index = updatedFavorites.findIndex(f => f.id === offer.id);
+
+        if (index === -1) {
+            updatedFavorites.push(offer);
             alert("Dodano ofertę do ulubionych");
+        } else {
+            updatedFavorites.splice(index, 1);
+            alert("Usunięto ofertę z ulubionych");
         }
+
+        setFavorites(updatedFavorites);
+        localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
     };
 
     const goToDetails = (id) => {
         navigate(`/offers/${id}`);
     };
+
 
     return (
         <div>
@@ -94,7 +103,9 @@ const Offers = () => {
                             </h3>
                             <p>Kategoria: {offer.category}</p>
                             <p>Cena: {offer.price} zł</p>
-                            <button onClick={() => addToFavorites(offer)}>❤️ Ulubione</button>
+                            <button onClick={() => toggleFavorite(offer)}>
+                                {favorites.some(f => f.id === offer.id) ? '💔 Usuń z ulubionych' : '❤️ Ulubione'}
+                            </button>
                         </div>
                     ))}
                 </div>
