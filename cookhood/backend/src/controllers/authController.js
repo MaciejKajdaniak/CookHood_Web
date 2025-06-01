@@ -13,11 +13,12 @@ exports.register = async (req, res) => {
     if (existing) return res.status(409).json({ message: 'Email już istnieje' });
 
     try {
+        const hashedPassword = await bcrypt.hash(password, 10);
         const user = await prisma.user.create({
             data: {
                 name,
                 email,
-                password: password,
+                password: hashedPassword,
                 role: role || 'buyer'
             },
         });
@@ -39,7 +40,8 @@ exports.loginUser = async (req, res) => {
             return res.status(401).json({ message: "Nieprawidłowy email lub hasło" });
         }
 
-        if (password != user.password) {
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
             return res.status(401).json({ message: "Nieprawidłowy email lub hasło" });
         }
 

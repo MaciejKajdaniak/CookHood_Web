@@ -23,7 +23,7 @@ model Offer {
   id        Int      @id @default(autoincrement())
   title     String
   category  String
-  photo     String
+  photo     String?
   price     Decimal
   createdAt DateTime @default(now())
   userId    Int

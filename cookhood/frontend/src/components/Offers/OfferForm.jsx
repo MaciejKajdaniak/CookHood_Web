@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function OfferForm() {
@@ -7,19 +7,17 @@ function OfferForm() {
     const [previewUrl, setPreviewUrl] = useState(null);
 
     const handleChange = (e) => {
-        if(e.target.name === 'photo'){
+        if (e.target.name === 'photo') {
             const file = e.target.files[0];
             setPhoto(file);
-            if(file){
+            if (file) {
                 const url = URL.createObjectURL(file);
                 setPreviewUrl(url);
-            }
-            else{
+            } else {
                 setPreviewUrl(null);
             }
-        }
-        else {
-            setFormData({...formData, [e.target.name]: e.target.value});
+        } else {
+            setFormData({ ...formData, [e.target.name]: e.target.value });
         }
     };
 
@@ -30,21 +28,17 @@ function OfferForm() {
         data.append('title', formData.title);
         data.append('category', formData.category);
         data.append('price', formData.price);
-        if(photo){
-            data.append('photo',photo);
+        if (photo) {
+            data.append('photo', photo);
         }
 
         try {
-            await axios.post(
-                'http://localhost:3000/api/offers/create-offer',
-                data,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                    withCredentials: true,
-                }
-            );
+            await axios.post('http://localhost:3000/api/offers/create-offer', data, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                withCredentials: true,
+            });
             alert('Oferta dodana pomyślnie!');
         } catch (err) {
             alert('Błąd przy dodawaniu oferty');
@@ -52,20 +46,21 @@ function OfferForm() {
         }
     };
 
-    useEffect(()=>{
-        return () =>{
-            if(previewUrl){
-                URL.revokeObjectURL(previewURL);
+    useEffect(() => {
+        return () => {
+            if (previewUrl) {
+                URL.revokeObjectURL(previewUrl);
             }
         };
-
     }, [previewUrl]);
 
-    return(
+    return (
         <form onSubmit={handleSubmit}>
-            <input name="title" placeholder="Tutaj wpisz co oferujesz" onChange={handleChange} required/>
-            <label htmlFor="category" className="form-label">Kategoria:</label>
-            <select name="category" placeholder="Kategoria" onChange={handleChange} required>
+            <label htmlFor="title">Tytuł:</label>
+            <input id="title" name="title" placeholder="Tutaj wpisz co oferujesz" onChange={handleChange} required />
+
+            <label htmlFor="category">Kategoria:</label>
+            <select id="category" name="category" onChange={handleChange} required>
                 <option value="meal">Posiłek</option>
                 <option value="fruits">Owoce</option>
                 <option value="vegetables">Warzywa</option>
@@ -73,14 +68,19 @@ function OfferForm() {
                 <option value="meat">Mięso</option>
                 <option value="other">Inne</option>
             </select>
+
             <label htmlFor="photo">Zdjęcie:</label>
-            <input name="photo" type="file" accept="image/*" onChange={handleChange} required/>
+            <input id="photo" name="photo" type="file" accept="image/*" onChange={handleChange} required />
+
             {previewUrl && (
-                <div style={{ margin: '10px 0'}}>
-                    <img src={previewUrl} alt="Preview" style={{maxWidth: '200px', maxHeight: '200px'}}/>
+                <div style={{ margin: '10px 0' }}>
+                    <img src={previewUrl} alt="Preview" style={{ maxWidth: '200px', maxHeight: '200px' }} />
                 </div>
             )}
-            <input name="price" type="number" placeholder="Cena za sztukę" min="0.01" step="0.01" onChange={handleChange} required/>
+
+            <label htmlFor="price">Cena:</label>
+            <input id="price" name="price" type="number" placeholder="Cena za sztukę" min="0.01" step="0.01" onChange={handleChange} required />
+
             <button type="submit">Dodaj ofertę</button>
         </form>
     );
