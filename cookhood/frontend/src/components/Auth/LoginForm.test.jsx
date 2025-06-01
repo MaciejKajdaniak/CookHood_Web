@@ -2,8 +2,9 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import LoginForm from './LoginForm';
 import axios from 'axios';
 import { BrowserRouter } from 'react-router-dom';
+import { vi } from 'vitest';
 
-jest.mock('axios');
+vi.mock('axios');
 
 const renderWithRouter = (ui) => render(<BrowserRouter>{ui}</BrowserRouter>);
 
@@ -34,7 +35,7 @@ describe('LoginForm', () => {
         const user = { id: 1, name: 'Test User', email: 'test@example.com' };
 
         axios.post.mockResolvedValueOnce({ data: { token, user } });
-        Storage.prototype.setItem = jest.fn();
+        Storage.prototype.setItem = vi.fn();
 
         renderWithRouter(<LoginForm />);
 

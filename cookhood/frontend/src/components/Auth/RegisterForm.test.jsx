@@ -1,13 +1,14 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import RegisterForm from './RegisterForm';
 import axios from 'axios';
+import { vi } from 'vitest';
 
-jest.mock('axios');
+vi.mock('axios');
 
 describe('RegisterForm', () => {
     it('shows alert on success', async () => {
         axios.post.mockResolvedValueOnce({});
-        window.alert = jest.fn();
+        window.alert = vi.fn();
 
         render(<RegisterForm />);
 
@@ -30,7 +31,7 @@ describe('RegisterForm', () => {
 
     it('shows alert on error', async () => {
         axios.post.mockRejectedValueOnce(new Error('Server error'));
-        window.alert = jest.fn();
+        window.alert = vi.fn();
 
         render(<RegisterForm />);
 
