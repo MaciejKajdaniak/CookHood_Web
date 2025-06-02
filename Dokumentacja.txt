@@ -1,0 +1,126 @@
+CookHood
+A. Opis aplikacji
+
+CookHood to aplikacja internetowa służąca do wyszukiwania oraz dodawania ofert kulinarnych — zarówno dań, jak i produktów spożywczych. Projekt powstał z myślą o wsparciu lokalnych sprzedawców i kucharzy, promowaniu świeżych, naturalnych smaków oraz budowaniu społeczności skupionej wokół wspólnego gotowania i zdrowego jedzenia.
+
+Korzystając z CookHood, użytkownik może:
+
+    założyć konto i zalogować się,
+
+    dodawać własne oferty (np. dania, produkty w wielu kategoriach),
+
+    przeglądać oferty innych użytkowników,
+
+    dodawać wybrane oferty do ulubionych,
+
+    wyświetlać szczegóły ofert oraz dane kontaktowe sprzedawcy.
+
+Aspekty techniczne:
+
+Backend:
+
+    Node.js z Express.js — serwer REST API
+
+    Prisma ORM z MySQL — warstwa dostępu do bazy danych
+
+    JWT — autoryzacja i uwierzytelnianie użytkowników
+
+    Multer — obsługa przesyłania zdjęć do ofert
+
+Frontend:
+
+    React — budowa interfejsu użytkownika
+
+    Testy jednostkowe i integracyjne Vitest, Jest, Supertest
+
+B. Podział pracy
+Osoba	Zakres odpowiedzialności
+Maciej Kajdaniak	rejestracja, logowanie, filtry ofert, kontakt ze sprzedawcą, design
+Dawid Stępniak		oferty, pasek nawigacji, ulubione oferty, testy
+Wspólnie	Dokumentacja, testowanie integracyjne, zarządzanie projektem
+C. Opis bazy danych
+
+Baza danych oparta jest na relacyjnej bazie MySQL, zarządzanej przez Prisma ORM. Struktura bazy wspiera zarządzanie użytkownikami, ofertami oraz ich ulubionymi.
+Główne tabele:
+
+    User
+
+        id — unikalny identyfikator
+
+        name — imię użytkownika
+
+        email — unikalny adres e-mail
+
+        password — hasło (zahashowane)
+
+        role — rola użytkownika (buyer lub seller)
+
+        createdAt — data utworzenia konta
+
+        Relacje: posiada wiele ofert i ulubionych
+
+    Offer
+
+        id — unikalny identyfikator oferty
+
+        title — tytuł oferty
+
+        category — kategoria (np. posiłek, nabiał, mięso)
+
+        photo — opcjonalne zdjęcie
+
+        price — cena oferty
+
+        createdAt — data dodania oferty
+
+        userId — ID użytkownika (sprzedawcy)
+
+        Relacje: należy do użytkownika, może mieć wiele ulubionych
+
+    Favorite
+
+        id — unikalny identyfikator rekordu
+
+        userId — ID użytkownika, który dodał do ulubionych
+
+        offerId — ID oferty
+
+        Relacje: powiązanie wielu do wielu między użytkownikami i ofertami
+
+Diagram bazy danych
+
++---------+      1       +--------+       N       +-----------+
+|  User   |-------------<|  Offer |--------------<| Favorite  |
++---------+              +--------+               +-----------+
+| id PK   |              | id PK  |               | id PK     |
+| name    |              | title  |               | userId FK |
+| email   |              |category|               | offerId FK|
+| password|              | photo  |               +-----------+
+| role    |              | price  |
+| createdAt|             | userId FK|
++---------+              +--------+
+
+D. Wyniki testów
+Backend
+
+    Wszystkie 13 testów przeszło pomyślnie.
+
+    Testy obejmują autoryzację JWT, tworzenie i pobieranie ofert, middleware i bezpieczeństwo.
+
+    Narzędzia: Jest, Supertest
+
+Test Suites: 5 passed, 5 total
+Tests:       13 passed, 13 total
+Time:        2.385 s
+
+Frontend
+
+    Testy komponentów React zakończone sukcesem.
+
+    Testy formularzy logowania, rejestracji oraz ofert poprawnie obsłużyły także błędy serwera.
+
+    Narzędzia: Vitest
+
+Test Files  3 passed (3)
+Tests       6 passed (6)
+Duration    2.99s
