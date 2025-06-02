@@ -98,7 +98,8 @@ Diagram bazy danych
 | password|              | photo  |               +-----------+
 | role    |              | price  |
 | createdAt|             | userId FK|
-+---------+              +--------+
++---------+      	 | createdAt|
+	                 +--------+
 
 D. Wyniki testów
 Backend
