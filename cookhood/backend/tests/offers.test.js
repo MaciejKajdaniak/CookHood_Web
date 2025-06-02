@@ -1,30 +1,38 @@
+const { describe, test, expect, beforeAll, afterAll } = require('@jest/globals');
 const request = require('supertest');
+const path = require('path');
 const app = require('../src/app');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-const jwt = require('jsonwebtoken');
+
+let token;
 
 describe('Offers API', () => {
-    let token;
-    let userId;
-
     beforeAll(async () => {
+        await prisma.favorite.deleteMany();
         await prisma.offer.deleteMany();
         await prisma.user.deleteMany();
 
-        const user = await prisma.user.create({
-            data: {
-                email: 'test@example.com',
-                password: 'hashedpassword',
-                name: "Test User"
-            },
-        });
+        await request(app)
+            .post('/api/auth/register')
+            .send({
+                email: 'offeruser@test.com',
+                password: 'test123',
+                name: 'Oferta Tester'
+            });
 
-        userId = user.id;
-        token = jwt.sign({ userId }, process.env.JWT_SECRET || 'testsecret');
+        const res = await request(app)
+            .post('/api/auth/login')
+            .send({
+                email: 'offeruser@test.com',
+                password: 'test123'
+            });
+
+        token = res.body.token;
     });
 
     afterAll(async () => {
+        await prisma.favorite.deleteMany();
         await prisma.offer.deleteMany();
         await prisma.user.deleteMany();
         await prisma.$disconnect();
@@ -35,9 +43,9 @@ describe('Offers API', () => {
             .post('/api/offers/create-offer')
             .set('Authorization', `Bearer ${token}`)
             .field('title', 'Test offer')
-            .field('category', 'Test category')
-            .field('description', 'Some description')
-            .field('price', '12.50');
+            .field('category', 'meal')
+            .field('price', '12.50')
+            .attach('photo', path.join(__dirname, 'assets/test-image.jpg'));
 
         expect(res.statusCode).toBe(201);
         expect(res.body.offer).toHaveProperty('id');

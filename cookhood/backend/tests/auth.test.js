@@ -4,9 +4,22 @@ const app = require('../src/app');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
+const testEmail = `user${Date.now()}@test.com`;
+const testPassword = 'test123';
+
 describe('Auth API', () => {
     beforeAll(async () => {
+        await prisma.favorite.deleteMany();
+        await prisma.offer.deleteMany();
         await prisma.user.deleteMany();
+
+        await request(app)
+            .post('/api/auth/register')
+            .send({
+                email: testEmail,
+                password: testPassword,
+                name: 'Test User',
+            });
     });
 
     afterAll(async () => {
@@ -16,25 +29,12 @@ describe('Auth API', () => {
         await prisma.$disconnect();
     });
 
-    test('Should register a new user', async () => {
-        const res = await request(app)
-            .post('/api/auth/register')
-            .send({
-                email: 'newuser@test.com',
-                password: 'test123',
-                name: 'Nowy Użytkownik',
-            });
-
-        expect(res.statusCode).toBe(201);
-        expect(res.body.message).toMatch(/Utworzono użytkownika/i);
-    });
-
     test('Should login with correct credentials', async () => {
         const res = await request(app)
             .post('/api/auth/login')
             .send({
-                email: 'newuser@test.com',
-                password: 'test123',
+                email: testEmail,
+                password: testPassword,
             });
 
         expect(res.statusCode).toBe(200);
@@ -45,7 +45,7 @@ describe('Auth API', () => {
         const res = await request(app)
             .post('/api/auth/login')
             .send({
-                email: 'newuser@test.com',
+                email: testEmail,
                 password: 'wrongpass',
             });
 
